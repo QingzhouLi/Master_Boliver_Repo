@@ -159,7 +159,7 @@ public class MySQLConnection implements DBConnection {
 		}
 		Set<Order> historyOrders = new HashSet<>();
 		try {
-			String sql = "SELECT a.user_id user_id,a.order_id order_id,a.robot_id robot_id,a.order_status order_status,"
+			String sql = "SELECT a.user_id user_id, a.sender, a.receiver, a.order_id order_id,a.robot_id robot_id,a.order_status order_status,"
 					     + "a.origin origin,a.destination destination,a.e_arrival e_arrival,a.a_arrival a_arrival,"
 					     + "a.create_time create_time,a.cost cost,c.type type From orderHistory a,Robot b,Robottype c"
 					     + " where a.user_id = ? and a.robot_id=b.robot_id and b.type_id=c.type_id";
@@ -178,6 +178,8 @@ public class MySQLConnection implements DBConnection {
 				builder.setOrderStatus(rs.getString("order_status"));
 				builder.setOrigin(rs.getString("origin"));
 				builder.setDestination(rs.getString("destination"));
+				builder.setSender(rs.getString("sender"));
+				builder.setReceiver(rs.getString("receiver"));
 				builder.seteArrival(rs.getString("e_arrival"));
 				builder.setaArrival(rs.getString("a_arrival"));
 				builder.setCreateTime(rs.getString("create_time"));
@@ -200,7 +202,7 @@ public class MySQLConnection implements DBConnection {
 		}
 		Set<Order> currentOrders = new HashSet<>();
 		try {
-			String sql = "SELECT currentorder.order_id, currentorder.robot_id, robotType.type, currentorder.order_status, robot.curLocation, currentorder.origin, currentorder.destination, currentorder.e_arrival, currentorder.create_time, currentorder.cost   \r\n" + 
+			String sql = "SELECT currentorder.order_id, currentorder.robot_id, robotType.type, currentorder.order_status, currentorder.sender, currentorder.receiver, robot.curLocation, currentorder.origin, currentorder.destination, currentorder.e_arrival, currentorder.create_time, currentorder.cost   \r\n" + 
 					"\r\n" + 
 					"FROM currentOrder\r\n" + 
 					"INNER JOIN robot ON currentOrder.robot_id = robot.robot_id \r\n" + 
@@ -220,6 +222,8 @@ public class MySQLConnection implements DBConnection {
 				builder.setOrderStatus(rs.getString("order_status"));
 				builder.setOrigin(rs.getString("origin"));
 				builder.setDestination(rs.getString("destination"));
+				builder.setSender(rs.getString("sender"));
+				builder.setReceiver(rs.getString("receiver"));
 				builder.seteArrival(rs.getString("e_arrival"));
 				builder.setCreateTime(rs.getString("create_time"));
 				builder.setCost(rs.getString("cost"));
@@ -291,7 +295,7 @@ public class MySQLConnection implements DBConnection {
 		}
 		Set<Order> results = new HashSet<>();
 		try {
-			String sql ="SELECT currentorder.order_id, currentorder.robot_id, robotType.type, robot.curLocation, currentorder.origin, currentorder.destination, currentorder.e_arrival, currentorder.create_time, currentorder.cost   \r\n" + 
+			String sql ="SELECT currentorder.order_id, currentorder.robot_id, currentorder.sender, currentorder.receiver, robotType.type, robot.curLocation, currentorder.origin, currentorder.destination, currentorder.e_arrival, currentorder.create_time, currentorder.cost   \r\n" + 
 					"\r\n" + 
 					"FROM currentOrder\r\n" + 
 					"INNER JOIN robot ON currentOrder.robot_id = robot.robot_id \r\n" + 
@@ -311,6 +315,8 @@ public class MySQLConnection implements DBConnection {
 				builder.setCurrentLocation(rs.getString("robot.curLocation"));
 				builder.setOrigin(rs.getString("currentorder.origin"));
 				builder.setDestination(rs.getString("currentorder.destination"));
+				builder.setSender(rs.getString("sender"));
+				builder.setReceiver(rs.getString("receiver"));
 				builder.seteArrival(rs.getString("currentorder.e_arrival"));
 				builder.setCreateTime(rs.getString("currentorder.create_time"));
 				builder.setCost(rs.getString("currentorder.cost"));
@@ -428,10 +434,35 @@ public class MySQLConnection implements DBConnection {
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, newStatus);
 			stmt.setString(2, curTime);
+			stmt.setString(3, orderId);
 			
 			return stmt.executeUpdate() == 1;
 			
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public boolean validateOrderId(String orderId) {
+		if (conn == null) {
+			System.err.println("DB connection failed");
+			return false;
+		}
+		try {
+			String sql = "SELECT * FROM currentorder WHERE order_id = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, orderId);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				return true;
+			}
+		} catch(Exception e) {
+			System.out.println("validateOrderId() error");
 			e.printStackTrace();
 		}
 		

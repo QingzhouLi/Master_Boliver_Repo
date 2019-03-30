@@ -70,6 +70,8 @@ public class Register extends HttpServlet {
 			 if(connection.registerUser(userId, username, password, email, firstname, lastname)) {
 				 obj.put("status", "you have wooooooo offically joined the rainbowBunny club, welcome!");
 			 }else {
+				 
+				 response.setStatus(400);
 				 obj.put("status", "Wooooo! userID already exists or something else is wrong I guess ^_^");
 				 }
 				RpcHelper.writeJsonObject(response, obj);

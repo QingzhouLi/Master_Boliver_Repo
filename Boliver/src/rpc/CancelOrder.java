@@ -42,17 +42,25 @@ public class CancelOrder extends HttpServlet {
 			// acquire parameters from front end
 			JSONObject input = RpcHelper.readJSONObject(request);
 			String orderId = input.getString("order_id").toString();
-						
-			if(conn.cancelOrder(orderId)){
-				obj.put("status", "you have successfully deleted order" + orderId);
+			if(orderId != null && conn.validateOrderId(orderId)) {
+				if(conn.cancelOrder(orderId)){
+					obj.put("status", "you have successfully deleted order" + orderId);
+				}else {
+					obj.put("status", "something went wrong, your request to cancel order " + orderId + " has failed");
+				}
 			}else {
-				obj.put("status", "something went wrong, your request to cancel order " + orderId + " has failed");
-			}
+			    response.setStatus(400);
+				obj.put("status", "the provided orderId does not exist");
+			}		
+			
+			RpcHelper.writeJsonObject(response, obj);	
 			
 		} else {
 			obj.put("status", "are you trying to gain illegal access? Where is your token?");
+			response.setStatus(400);
 			RpcHelper.writeJsonObject(response, obj);
 		}
+		
 	}
 
 }

@@ -45,6 +45,7 @@ public class TrackOrder extends HttpServlet {
 			DBConnection conn = DBConnectionFactory.getConnection();
 			try {
 				JSONObject input = RpcHelper.readJSONObject(request);
+				
 				String orderId = input.getString("order_id");
 				
 				JSONArray array = new JSONArray();
@@ -53,7 +54,13 @@ public class TrackOrder extends HttpServlet {
 					JSONObject obj = pair.toJSONObject();
 					array.put(obj);
 				}
-
+				
+				if(array.length() == 0) {
+					response.setStatus(400);
+					JSONObject err = new JSONObject();
+					err.put("isEmpty","cannot find any order that matches your orderId");
+					array.put(err);
+				}
 				RpcHelper.writeJsonArray(response, array);
 			} catch (Exception e) {
 				e.printStackTrace();

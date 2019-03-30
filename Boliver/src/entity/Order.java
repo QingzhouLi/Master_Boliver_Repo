@@ -161,6 +161,8 @@ public class Order {
 			obj.put("robot_id", robotId);
 			obj.put("robotType", robotType);
 			obj.put("currentLocation", currentLocation);
+			obj.put("sender", sender);
+			obj.put("receiver", receiver);
 			obj.put("user_id", userId);
 			obj.put("cost", cost);
 			obj.put("orderStatus", orderStatus);

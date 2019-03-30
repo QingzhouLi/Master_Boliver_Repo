@@ -35,7 +35,6 @@ public class ConfirmOrder extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String token = BearerToken.getBearerToken(request);
 		JSONObject obj = new JSONObject();
-		
 		if(token != null && CreateAndVerify.isTokenValid(token, request.getRemoteAddr())) {
 			// connect to database
 			DBConnection conn = DBConnectionFactory.getConnection();
@@ -43,14 +42,22 @@ public class ConfirmOrder extends HttpServlet {
 			JSONObject input = RpcHelper.readJSONObject(request);
 			String orderId = input.getString("order_id").toString();
 			
-			if(conn.confirmOrder(orderId)){
-				obj.put("status", "order " + orderId + " is now compelte, and moved to your orderHistory");
-			}else {
-				obj.put("status", "something went wrong, your request to confirm order " + orderId + " has failed");
+			if(orderId != null && conn.validateOrderId(orderId)) {
+				if(conn.confirmOrder(orderId)){
+					obj.put("status", "order " + orderId + " is now compelte, and moved to your orderHistory");
+				}else {
+					obj.put("status", "something went wrong, your request to confirm order " + orderId + " has failed");
+				}
+			} else {
+				response.setStatus(400);
+				obj.put("status", "the provided orderId does not exist");
 			}
+			
+			RpcHelper.writeJsonObject(response, obj);
 			
 		} else {
 			obj.put("status", "are you trying to gain illegal access? Where is your token?");
+			response.setStatus(400);
 			RpcHelper.writeJsonObject(response, obj);
 		}
 	}

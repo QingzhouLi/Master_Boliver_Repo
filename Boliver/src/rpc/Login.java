@@ -78,7 +78,7 @@ public class Login extends HttpServlet {
 	   			response.setStatus(401);
 	   			obj.put("status", "Apparently, your username either doesnt exist or your password is wrong");
 	   		 }
-	   		 
+	   		//response.setHeader("Access-Control-Allow-Origin", "*");
 	   		RpcHelper.writeJsonObject(response, obj);
 	   		
 		} catch ( Exception e) {
