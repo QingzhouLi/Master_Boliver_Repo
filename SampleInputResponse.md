@@ -1,3 +1,5 @@
+a documentation of sample input and response for each endpoint. still under construction.
+
 #### `[POST] /login `
 * ##### Input
 ```JSON
