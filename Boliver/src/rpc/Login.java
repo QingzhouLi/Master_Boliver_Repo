@@ -70,7 +70,8 @@ public class Login extends HttpServlet {
 	   		 if(connection.verifyLogin(username, password)) {
 	   			Calendar cal = Calendar.getInstance();
 	   			cal.add(Calendar.SECOND, 3600000);
-	   			String token = CreateAndVerify.createToken(request.getRemoteAddr(), cal.getTimeInMillis());			
+	   			String userId = connection.getUserId(username);
+	   			String token = CreateAndVerify.createToken(request.getRemoteAddr(), userId, cal.getTimeInMillis());			
 				//System.out.println("token::"+token);
 				obj.put("access_token", token);					
 	   		 }

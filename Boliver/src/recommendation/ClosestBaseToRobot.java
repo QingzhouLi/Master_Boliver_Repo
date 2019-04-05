@@ -13,15 +13,9 @@ public class ClosestBaseToRobot {
 	public static String getAddress(String curLocation) {
 		DBConnection conn = DBConnectionFactory.getConnection();
 		
-		// pre-process curLocation
-		char[] array = curLocation.toCharArray();
-		for(int i = 0; i < array.length; i++) {
-			if(array[i] == ' ') {
-				array[i] = '+';
-			}
-		}
-		String processedCurLocation = new String(array, 0, array.length);
-
+		// Pre-process address to fill empty spaces with '+' before passing to GoogleAPI
+		String processedCurLocation = AddrAddPlus.convert(curLocation);
+		
 		GeoLocation encodedCurLocation = GoogleAPI.getGeoEncoding(processedCurLocation);
 		
 		List<BaseStatus> baseList = new ArrayList<>();

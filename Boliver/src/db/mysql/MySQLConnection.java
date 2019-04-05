@@ -149,6 +149,27 @@ public class MySQLConnection implements DBConnection {
 		}
 		return null;
 	}
+	@Override
+	public String getUserId(String username) {
+		if (conn == null) {
+			System.out.println("DB connection failed for getCurrentOrders getHistoryOrders");
+			return null;
+		}
+		try {
+			String sql = "SELECT user_id FROM users WHERE username = ?";
+		    PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, username);
+			ResultSet rs = stmt.executeQuery();
+			String userId = null;
+			while(rs.next()) {
+				userId = rs.getString("user_id");
+			}
+			return userId;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	@Override
 	public Set<Order> getHistoryOrders(String userId, Integer start, Integer end) {
