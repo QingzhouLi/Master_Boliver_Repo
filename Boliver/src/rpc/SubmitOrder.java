@@ -47,7 +47,11 @@ public class SubmitOrder extends HttpServlet {
 			// connect to database
 			DBConnection conn = DBConnectionFactory.getConnection();
 			// acquire parameters from front end
-			JSONObject input = RpcHelper.readJSONObject(request);	
+			JSONObject input = RpcHelper.readJSONObject(request);
+			
+			// Get userId
+			String username = CreateAndVerify.getUsername(token);
+			String userId = conn.getUserId(username);
 			
 			try {
 				//generate order ID and create time
@@ -62,7 +66,6 @@ public class SubmitOrder extends HttpServlet {
 				OrderBuilder builder = new OrderBuilder();
 				
 				String robotId = conn.getRobotId(input.get("address").toString(), input.get("type").toString());
-				String userId = input.getString("user_id");
 				String origin = input.getString("origin");
 				String destination = input.getString("destination");
 				String eArrival = CalETime.calculateETime(input.getString("travel_time")); //calculate estimated arrival time
