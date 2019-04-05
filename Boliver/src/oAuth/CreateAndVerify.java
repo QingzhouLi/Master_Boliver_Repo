@@ -27,12 +27,13 @@ public class CreateAndVerify {
 	);
 	// GOOOD
 	
-	public static String createToken(String ipAddr,long expired) {
+	public static String createToken(String ipAddr, String userId, long expired) {
 		//System.out.println(base64Key);
 		//System.out.println(secretBytes.length);
-		
+	
 		String token =  Jwts.builder()
 					.setSubject(ipAddr)
+				    .setAudience(userId)
 					.signWith(CreateAndVerify.signingKey)
 					.setIssuer("Boliver")
 					.setExpiration(new Date(expired))					
@@ -94,5 +95,26 @@ public class CreateAndVerify {
 		 */
 		
 		return true;
+	}
+	
+	public static String getUsername(String token)throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, IllegalArgumentException{
+		try {
+			Claims claims = Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token).getBody();
+			String userId = claims.getAudience();
+			System.out.println("CreateAndVerify/getUsername - userId in token is:" + userId);
+			return userId;
+		}		
+		catch(ExpiredJwtException expiredException) {
+			System.out.println("expired exception");
+			//	Redirect to get new token and handle all scenarios
+			return null;
+			
+		}		
+		catch(Exception ex) {
+			System.out.println(ex);
+			System.out.println("----------------------------------------------------------------------------------");
+			ex.printStackTrace();
+			return null;
+		}
 	}
 }

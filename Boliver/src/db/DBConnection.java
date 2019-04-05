@@ -46,4 +46,6 @@ public interface DBConnection {
 	public boolean confirmOrder(String orderId);
 	
 	public boolean validateOrderId(String orderId);
+	
+	public String getUserId(String username);
 }

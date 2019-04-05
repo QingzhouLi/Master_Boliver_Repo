@@ -12,7 +12,9 @@ public class TestStringManipulation {
 		
 		return new String(array, 0, array.length);
 	}
+	/*
 	public static void main(String[] args) {
 		System.out.println(TestStringManipulation.solve("3369 Mission St, San Francisco, CA 94110"));
 	}
+	*/
 }
