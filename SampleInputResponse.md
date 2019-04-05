@@ -129,7 +129,6 @@ a documentation of sample input and response for each endpoint. still under cons
   * ##### Input
   ```JSON
   {
-  	"user_id" : "neko2019032704500200000",
   	"origin" : "123 Sunset Blvd, Santa Monica, CA 12345",
   	"destination" : "456 Beach, Santa Monica, CA 67890",
   	"travel_time" : "20",
