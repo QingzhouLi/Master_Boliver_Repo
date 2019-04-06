@@ -38,7 +38,7 @@ public class OrderHistory extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		System.out.println("received a order history request");
 		// Get token from request
 		String token = BearerToken.getBearerToken(request);
 		
