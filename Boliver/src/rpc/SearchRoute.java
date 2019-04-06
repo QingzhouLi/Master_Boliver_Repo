@@ -33,11 +33,11 @@ public class SearchRoute extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Get token from request
 		String token = BearerToken.getBearerToken(request);
 		if(token != null && CreateAndVerify.isTokenValid(token, request.getRemoteAddr())) {
-			
+
 			JSONObject input = RpcHelper.readJSONObject(request);
 			try {
 				// Get origin and destination from request
@@ -53,6 +53,7 @@ public class SearchRoute extends HttpServlet {
 			}
 		} else {  // if your token is invalid,
 			JSONObject obj = new JSONObject();
+			response.setStatus(400);
 			obj.put("status", "are you trying to gain illegal access? Where is your token?");
 			RpcHelper.writeJsonObject(response, obj);
 		}
