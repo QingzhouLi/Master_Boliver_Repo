@@ -94,7 +94,7 @@ public class Routes {
 		JSONObject groundBotObj = new JSONObject();
 		
 		addr.put("origin", origin)
-			.put("destiantion", destination);
+			.put("destination", destination);
 		
 		droneObj.put("travel_time", drone.get("time")) // time unit = minutes
 		        .put("cost", dronePrice)

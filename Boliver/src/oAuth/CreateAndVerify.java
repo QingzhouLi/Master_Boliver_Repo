@@ -97,7 +97,7 @@ public class CreateAndVerify {
 		return true;
 	}
 	
-	public static String getUsername(String token)throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, IllegalArgumentException{
+	public static String getUserId(String token)throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, IllegalArgumentException{
 		try {
 			Claims claims = Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token).getBody();
 			String userId = claims.getAudience();

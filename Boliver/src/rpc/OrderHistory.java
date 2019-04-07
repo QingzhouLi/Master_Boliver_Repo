@@ -45,7 +45,7 @@ public class OrderHistory extends HttpServlet {
 		if(token != null && CreateAndVerify.isTokenValid(token, request.getRemoteAddr())) {
 			DBConnection conn = DBConnectionFactory.getConnection();
 			try {				
-				String userId = CreateAndVerify.getUsername(token);
+				String userId = CreateAndVerify.getUserId(token);
 				JSONArray array = new JSONArray();
 				Set<Order> orders = conn.getHistoryOrders(userId, null, null);
 				for (Order order : orders) {

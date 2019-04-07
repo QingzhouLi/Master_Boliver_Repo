@@ -50,8 +50,7 @@ public class SubmitOrder extends HttpServlet {
 			JSONObject input = RpcHelper.readJSONObject(request);
 			
 			// Get userId
-			String username = CreateAndVerify.getUsername(token);
-			String userId = conn.getUserId(username);
+			String userId = CreateAndVerify.getUserId(token);
 			
 			try {
 				//generate order ID and create time
