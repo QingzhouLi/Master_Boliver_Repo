@@ -44,7 +44,7 @@ public class CurrentOrder extends HttpServlet {
 		if(token != null && CreateAndVerify.isTokenValid(token, request.getRemoteAddr())) { // <---- verify token and ipAddr
 			DBConnection conn = DBConnectionFactory.getConnection();       // <---- connect to db, and fullfill client's request
 			try {
-				String userId = CreateAndVerify.getUsername(token);
+				String userId = CreateAndVerify.getUserId(token);
 				JSONArray array = new JSONArray();
 				Set<Order> orders = conn.getCurrentOrders(userId);
 				for (Order order : orders) {

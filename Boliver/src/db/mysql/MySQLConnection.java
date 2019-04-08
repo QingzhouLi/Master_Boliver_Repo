@@ -316,7 +316,7 @@ public class MySQLConnection implements DBConnection {
 		}
 		Set<Order> results = new HashSet<>();
 		try {
-			String sql ="SELECT currentorder.order_id, currentorder.robot_id, currentorder.sender, currentorder.receiver, robotType.type, robot.curLocation, currentorder.origin, currentorder.destination, currentorder.e_arrival, currentorder.create_time, currentorder.cost   \r\n" + 
+			String sql ="SELECT currentorder.order_id, currentorder.robot_id, currentorder.sender, currentorder.receiver, currentorder.order_status, robotType.type, robot.curLocation, currentorder.origin, currentorder.destination, currentorder.e_arrival, currentorder.create_time, currentorder.cost   \r\n" + 
 					"\r\n" + 
 					"FROM currentOrder\r\n" + 
 					"INNER JOIN robot ON currentOrder.robot_id = robot.robot_id \r\n" + 
@@ -341,6 +341,7 @@ public class MySQLConnection implements DBConnection {
 				builder.seteArrival(rs.getString("currentorder.e_arrival"));
 				builder.setCreateTime(rs.getString("currentorder.create_time"));
 				builder.setCost(rs.getString("currentorder.cost"));
+				builder.setOrderStatus(rs.getString("currentorder.order_status"));
 				results.add(builder.build());
 			}
 		} catch (SQLException e) {

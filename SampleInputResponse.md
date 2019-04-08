@@ -87,8 +87,8 @@ a documentation of sample input and response for each endpoint. still under cons
   * ##### Input
   ```JSON
   {
-      "origin": "3369+Mission+St,+San+Francisco,+CA+94110",
-      "destination": "448+Cortland+Ave,+San+Francisco,+CA+94110"
+      "origin": "3369 Mission St, San Francisco, CA 94110",
+      "destination": "448 Cortland Ave, San Francisco, CA 94110"
   }
   ```
   * ##### Response
@@ -129,7 +129,6 @@ a documentation of sample input and response for each endpoint. still under cons
   * ##### Input
   ```JSON
   {
-  	"user_id" : "neko2019032704500200000",
   	"origin" : "123 Sunset Blvd, Santa Monica, CA 12345",
   	"destination" : "456 Beach, Santa Monica, CA 67890",
   	"travel_time" : "20",
@@ -157,19 +156,7 @@ a documentation of sample input and response for each endpoint. still under cons
 
 #### `[GET] /currentorder`
   * ##### Input
-    ```JSON
-    {
-  	"user_id" : "neko2019032704500200000",
-  	"origin" : "123 Sunset Blvd, Santa Monica, CA 12345",
-  	"destination" : "456 Beach, Santa Monica, CA 67890",
-  	"travel_time" : "20",
-  	"cost" : "10",
-  	"sender" : "pipiP",
-  	"receiver" : "popko",
-  	"address" : "75 Geary Blvd, San Francisco, CA 94118",
-  	"type" : "drone"
-    }
-    ```
+    only need token in Header
   * ##### Response
       `success`
     ```JSON
@@ -187,11 +174,7 @@ a documentation of sample input and response for each endpoint. still under cons
 
 #### `[GET] /orderhistory`
   * ##### Input
-    ```JSON
-    {
-      "user_id": "hito2019032704500200004"
-    }
-    ```
+    only need token in Header
   * ##### Response
       `success`
     ```JSON

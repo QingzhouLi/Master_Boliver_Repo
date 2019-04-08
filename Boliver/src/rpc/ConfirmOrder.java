@@ -32,7 +32,7 @@ public class ConfirmOrder extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String token = BearerToken.getBearerToken(request);
 		JSONObject obj = new JSONObject();
 		if(token != null && CreateAndVerify.isTokenValid(token, request.getRemoteAddr())) {

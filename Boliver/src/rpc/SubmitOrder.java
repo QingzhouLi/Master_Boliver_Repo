@@ -47,7 +47,10 @@ public class SubmitOrder extends HttpServlet {
 			// connect to database
 			DBConnection conn = DBConnectionFactory.getConnection();
 			// acquire parameters from front end
-			JSONObject input = RpcHelper.readJSONObject(request);	
+			JSONObject input = RpcHelper.readJSONObject(request);
+			
+			// Get userId
+			String userId = CreateAndVerify.getUserId(token);
 			
 			try {
 				//generate order ID and create time
@@ -62,7 +65,6 @@ public class SubmitOrder extends HttpServlet {
 				OrderBuilder builder = new OrderBuilder();
 				
 				String robotId = conn.getRobotId(input.get("address").toString(), input.get("type").toString());
-				String userId = input.getString("user_id");
 				String origin = input.getString("origin");
 				String destination = input.getString("destination");
 				String eArrival = CalETime.calculateETime(input.getString("travel_time")); //calculate estimated arrival time
@@ -85,17 +87,16 @@ public class SubmitOrder extends HttpServlet {
 				Order order = builder.build();
 				JSONObject obj = new JSONObject();
 				
-				if(conn.placeOrder(order)) {
-					obj.put("status", "your order has been created");
-				} else {
+				if(conn.placeOrder(order) && conn.updateRobotStatus(order.getRobotId(), order.getDestination(), "retrieving", "-1")) {
+					obj.put("status", "order placed, robot assigned");
+				}else if(!conn.placeOrder(order)) {
 					response.setStatus(401);
 					obj.put("status", "something went wrong when trying to create your order");
+				}else {
+					response.setStatus(401);
+					obj.put("status", "something went wrong when trying to fetch your robot");
 				}
-				if(conn.updateRobotStatus(order.getRobotId(), order.getDestination(), "retrieving", "-1")) {
-					obj.put("robot_status", "assigned robot has received your order and is now on its way to retrieve the package");
-				} else {
-					
-				}
+				
 				RpcHelper.writeJsonObject(response, obj);
 				
 			} catch (Exception e) {
