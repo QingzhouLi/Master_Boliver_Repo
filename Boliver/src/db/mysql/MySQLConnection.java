@@ -149,6 +149,27 @@ public class MySQLConnection implements DBConnection {
 		}
 		return null;
 	}
+	@Override
+	public String getUserId(String username) {
+		if (conn == null) {
+			System.out.println("DB connection failed for getCurrentOrders getHistoryOrders");
+			return null;
+		}
+		try {
+			String sql = "SELECT user_id FROM users WHERE username = ?";
+		    PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, username);
+			ResultSet rs = stmt.executeQuery();
+			String userId = null;
+			while(rs.next()) {
+				userId = rs.getString("user_id");
+			}
+			return userId;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	@Override
 	public Set<Order> getHistoryOrders(String userId, Integer start, Integer end) {
@@ -295,7 +316,7 @@ public class MySQLConnection implements DBConnection {
 		}
 		Set<Order> results = new HashSet<>();
 		try {
-			String sql ="SELECT currentorder.order_id, currentorder.robot_id, currentorder.sender, currentorder.receiver, robotType.type, robot.curLocation, currentorder.origin, currentorder.destination, currentorder.e_arrival, currentorder.create_time, currentorder.cost   \r\n" + 
+			String sql ="SELECT currentorder.order_id, currentorder.robot_id, currentorder.sender, currentorder.receiver, currentorder.order_status, robotType.type, robot.curLocation, currentorder.origin, currentorder.destination, currentorder.e_arrival, currentorder.create_time, currentorder.cost   \r\n" + 
 					"\r\n" + 
 					"FROM currentOrder\r\n" + 
 					"INNER JOIN robot ON currentOrder.robot_id = robot.robot_id \r\n" + 
@@ -320,6 +341,7 @@ public class MySQLConnection implements DBConnection {
 				builder.seteArrival(rs.getString("currentorder.e_arrival"));
 				builder.setCreateTime(rs.getString("currentorder.create_time"));
 				builder.setCost(rs.getString("currentorder.cost"));
+				builder.setOrderStatus(rs.getString("currentorder.order_status"));
 				results.add(builder.build());
 			}
 		} catch (SQLException e) {

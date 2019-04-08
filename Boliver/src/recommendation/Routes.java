@@ -19,9 +19,13 @@ import external.Haversince;
 public class Routes {
 	public static JSONObject calculateRoutes(String origin, String destination) {
 		
+		// Pre-process address before passing them to GoogleAPI 
+		String originPlus = AddrAddPlus.convert(origin);
+		String destinationPlus = AddrAddPlus.convert(destination);
+		
 		// Convert address into lat,lon
-		GeoLocation encoding_origin = GoogleAPI.getGeoEncoding(origin);
-		GeoLocation encoding_dest = GoogleAPI.getGeoEncoding(destination);
+		GeoLocation encoding_origin = GoogleAPI.getGeoEncoding(originPlus);
+		GeoLocation encoding_dest = GoogleAPI.getGeoEncoding(destinationPlus);
 		
 		// Get status on available robots in each base
 		DBConnection conn = DBConnectionFactory.getConnection(); // Connect to database
@@ -90,7 +94,7 @@ public class Routes {
 		JSONObject groundBotObj = new JSONObject();
 		
 		addr.put("origin", origin)
-			.put("destiantion", destination);
+			.put("destination", destination);
 		
 		droneObj.put("travel_time", drone.get("time")) // time unit = minutes
 		        .put("cost", dronePrice)

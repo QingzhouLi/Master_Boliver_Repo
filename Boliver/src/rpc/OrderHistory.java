@@ -44,9 +44,8 @@ public class OrderHistory extends HttpServlet {
 		
 		if(token != null && CreateAndVerify.isTokenValid(token, request.getRemoteAddr())) {
 			DBConnection conn = DBConnectionFactory.getConnection();
-			try {
-				JSONObject input = RpcHelper.readJSONObject(request);
-				String userId = input.getString("user_id");
+			try {				
+				String userId = CreateAndVerify.getUserId(token);
 				JSONArray array = new JSONArray();
 				Set<Order> orders = conn.getHistoryOrders(userId, null, null);
 				for (Order order : orders) {
