@@ -15,11 +15,7 @@ public class RpcHelper {
 	public static void writeJsonArray(HttpServletResponse response, JSONArray array) throws IOException{
 		response.setContentType("application/json");
 		//response.setHeader("Access-Control-Allow-Origin", "*");
-<<<<<<< HEAD
-		response.setHeader("Access-Control-Allow-Origin", "http://localhost:3001");
-=======
 		response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000/home");
->>>>>>> af29fa30cd3b8bebab0643dfc58d1d0686958277
 		PrintWriter out = response.getWriter();
 		out.print(array);
 		out.close();
