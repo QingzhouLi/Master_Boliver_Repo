@@ -174,18 +174,18 @@ public class MySQLConnection implements DBConnection {
 	}
 	
 	@Override
-	public Set<Order> getHistoryOrders(String userId, Integer start, Integer end) {
+	public List<Order> getHistoryOrders(String userId, Integer start, Integer end) {
 		
 		if (conn == null) {
 			System.out.println("DB connection failed for getCurrentOrders getHistoryOrders");
-			return new HashSet<>();
+			return new ArrayList<>();
 		}
-		Set<Order> historyOrders = new HashSet<>();
+		List<Order> historyOrders = new ArrayList<>();
 		try {
 			String sql = "SELECT a.user_id user_id, a.sender, a.receiver, a.order_id order_id,a.robot_id robot_id,a.order_status order_status,"
 					     + "a.origin origin,a.destination destination,a.e_arrival e_arrival,a.a_arrival a_arrival,"
 					     + "a.create_time create_time,a.cost cost,c.type type From orderHistory a,Robot b,Robottype c"
-					     + " where a.user_id = ? and a.robot_id=b.robot_id and b.type_id=c.type_id";
+					     + " where a.user_id = ? and a.robot_id=b.robot_id and b.type_id=c.type_id ORDER BY STR_TO_DATE(a_arrival,'%H:%i EDT %m-%d-%Y') DESC";
 			
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, userId);
@@ -218,19 +218,19 @@ public class MySQLConnection implements DBConnection {
 	}
 	
 	@Override
-	public Set<Order> getCurrentOrders(String userId){
+	public List<Order> getCurrentOrders(String userId){
 		if (conn == null) {
 			System.out.println("DB connection failed for getCurrentOrders");
-			return new HashSet<>();
+			return new ArrayList<>();
 		}
-		Set<Order> currentOrders = new HashSet<>();
+		List<Order> currentOrders = new ArrayList<>();
 		try {
 			String sql = "SELECT currentorder.order_id, currentorder.robot_id, robotType.type, currentorder.order_status, currentorder.sender, currentorder.receiver, robot.curLocation, currentorder.origin, currentorder.destination, currentorder.e_arrival, currentorder.create_time, currentorder.cost   \r\n" + 
 					"\r\n" + 
 					"FROM currentOrder\r\n" + 
 					"INNER JOIN robot ON currentOrder.robot_id = robot.robot_id \r\n" + 
 					"INNER JOIN robotType ON robot.type_id = robotType.type_id\r\n" + 
-					"WHERE currentorder.user_id = ?";
+					"WHERE currentorder.user_id = ? ORDER BY currentorder.order_id DESC";
 			
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, userId);
@@ -377,7 +377,6 @@ public class MySQLConnection implements DBConnection {
 					if(rs.getString("type_id").equals("2")) {
 						builder.setDrone(true);
 					}
-					
 					builder.setBaseId(i);
 					builder.setLat(rs.getString("lat"));
 					builder.setLon(rs.getString("lon"));

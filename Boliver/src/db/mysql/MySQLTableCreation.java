@@ -236,7 +236,7 @@ public class MySQLTableCreation {
 			sql = "INSERT INTO OrderHistory VALUES('52019032705031200010','2','hito2019032704500200004', '3','3369 Mission St, San Francisco, CA 94110','448 Cortland Ave, San Francisco, CA 94110','hitobito','The Good Life Grocery','11:30 EDT 03-17-2019','12:00 EDT 03-17-2019','12:20 EDT 03-17-2019', '1')";
 			statement.execute(sql);
 			// demo
-			sql = "INSERT INTO OrderHistory VALUES('2019041007401400001','14','eva2019040807380300001','3','4101 Judah St, San Francisco, CA 94122','3138 Noriega St, San Francisco, CA 94122','eva','dave','9:00 EDT 04-10-2019','9:05 EDT 04-10-2019','8:30 EDT 04-10-2019','5')";
+			sql = "INSERT INTO OrderHistory VALUES('2019041007401400001','14','eva2019040807380300001','3','4101 Judah St, San Francisco, CA 94122','3138 Noriega St, San Francisco, CA 94122','eva','dave','19:00 EDT 04-10-2019','19:05 EDT 04-10-2019','18:30 EDT 04-10-2019','5')";
 			statement.execute(sql);
 			sql = "INSERT INTO OrderHistory VALUES('2019041007401400010','14','eva2019040807380300001','4','221 4th St, San Francisco, CA 94103','1100 California St, San Francisco, CA 94108','eva','Jack','10:25 EDT 04-10-2019','10:25 EDT 04-10-2019','10:00 EDT 04-10-2019','4')";
 			statement.execute(sql);
