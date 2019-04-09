@@ -1,10 +1,12 @@
 package db.mysql;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -450,7 +452,10 @@ public class MySQLConnection implements DBConnection {
 			return false;
 		}
 		Calendar calendar = Calendar.getInstance();
-		String curTime = calendar.getTime().toString();
+		Date curTimeRaw = calendar.getTime();
+		String pattern = "HH:mm zzz MM-dd-yyyy";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		String curTime = simpleDateFormat.format(curTimeRaw);
 		try {
 			String sql = "UPDATE orderHistory SET order_status = ?, a_arrival= ? WHERE order_id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
