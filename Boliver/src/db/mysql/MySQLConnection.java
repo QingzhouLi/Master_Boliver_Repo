@@ -368,29 +368,26 @@ public class MySQLConnection implements DBConnection {
 				PreparedStatement stmt = conn.prepareStatement(sql);
 				stmt.setInt(1, i);
 				ResultSet rs = stmt.executeQuery();
-				BaseStatusBuilder builder = new BaseStatusBuilder();
-				builder.setBaseId(i);
-				boolean flag = false;
+
 				while(rs.next()) {
+					BaseStatusBuilder builder = new BaseStatusBuilder();
 					if(rs.getString("type_id").equals("1")) {
 						builder.setGround(true);
 					}
 					if(rs.getString("type_id").equals("2")) {
 						builder.setDrone(true);
 					}
-					if(!flag) {
-						builder.setLat(rs.getString("lat"));
-						builder.setLon(rs.getString("lon"));
-						builder.setAddress(rs.getString("address"));
-						flag = true;
-					}
+					
+					builder.setBaseId(i);
+					builder.setLat(rs.getString("lat"));
+					builder.setLon(rs.getString("lon"));
+					builder.setAddress(rs.getString("address"));
+					results.add(builder.build());
 				}
-				results.add(builder.build());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return results;
 	}
 	
@@ -541,6 +538,7 @@ public class MySQLConnection implements DBConnection {
 		}
 		
 		// calculate closest base and get its address
+		System.out.println("MySQLConnection.moveOrder.curLocation: " + curLocation);
 		String returnBaseAddr = ClosestBaseToRobot.getAddress(curLocation);
 		
 		// update robotStatus
