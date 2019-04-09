@@ -82,9 +82,17 @@ public class Routes {
 		// Get travel distance and time for drones pickup location to destination
 		Map<String, Double> drone = CalDrone.calculateDrone(encoding_origin, encoding_dest);
 		//
-		double dronePrice = robotInfo.getDroneRate() * (drone.get("distance") + distanceOfCDB);
+		double dronePrice = -0.1;
+		if(distanceOfCDB != 0.0) {
+			dronePrice = robotInfo.getDroneRate() * (drone.get("distance") + distanceOfCDB);
+		}
+		
 		//
-		double groundPrice = robotInfo.getGroundRobotRate() * ((groundRobot.getDistance_meters() + dMatrixOfCGB.getDistance_meters())/1609.344);
+		double groundPrice = -0.1;
+		if(dMatrixOfCGB != null) {
+			groundPrice = robotInfo.getGroundRobotRate() * ((groundRobot.getDistance_meters() + dMatrixOfCGB.getDistance_meters())/1609.344);
+		}
+		
 		
 		System.out.println("returning object"); // <--- to show in console that I have successfully reached this point
 			
@@ -97,18 +105,18 @@ public class Routes {
 			.put("destination", destination);
 		
 		droneObj.put("travel_time", drone.get("time")) // time unit = minutes
-		        .put("cost", dronePrice)
-		        .put("pickup_time", ClosestDroneBase == null ? "no available drone, please wait" : distanceOfCDB/drone.get("speed"))
-		        .put("travel_distance", drone.get("distance") + distanceOfCDB) // distance unit = miles
+		        .put("cost", dronePrice == -0.1 ? "nope" : dronePrice)
+		        .put("pickup_time", ClosestDroneBase == null ? "nope" : distanceOfCDB/drone.get("speed"))
+		        .put("travel_distance", distanceOfCDB == 0.0 ? "nope" : drone.get("distance") + distanceOfCDB) // distance unit = miles
 		        .put("avail_status", ClosestDroneBase == null ? "no" : "yes")
-		        .put("base", ClosestDroneBase == null ? "no available drone, please wait" : ClosestDroneBase.getAddress());
+		        .put("base", ClosestDroneBase == null ? "no available drone, try again later" : ClosestDroneBase.getAddress());
 		
 		groundBotObj.put("travel_time", groundRobot.getDuration_seconds()/60) // time unit = minutes
-			        .put("cost", groundPrice)
-			        .put("pickup_time", ClosestGrobotBase == null ? "no available groundBot, please wait" : dMatrixOfCGB.getDuration_seconds()/60)
-			        .put("travel_distance", (groundRobot.getDistance_meters() + dMatrixOfCGB.getDistance_meters())/1609.344) // distance unit = miles
+			        .put("cost", groundPrice == -0.1 ? "nope" : groundPrice)
+			        .put("pickup_time", ClosestGrobotBase == null ? "no available groundBot, try again later" : dMatrixOfCGB.getDuration_seconds()/60)
+			        .put("travel_distance", dMatrixOfCGB == null ? "nope" : (groundRobot.getDistance_meters() + dMatrixOfCGB.getDistance_meters())/1609.344) // distance unit = miles
 			        .put("avail_status", ClosestGrobotBase == null ? "no" : "yes")
-			        .put("base", ClosestGrobotBase == null ? "no available groundBot, please wait" : ClosestGrobotBase.getAddress());
+			        .put("base", ClosestGrobotBase == null ? "no available groundBot, try again later" : ClosestGrobotBase.getAddress());
 		
 		mainObj.put("DeliveryAddress", addr)
 			   .put("Drone", droneObj)
