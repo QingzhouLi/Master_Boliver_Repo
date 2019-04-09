@@ -72,6 +72,10 @@ public class SubmitOrder extends HttpServlet {
 				String sender = input.getString("sender");
 				String receiver = input.getString("receiver");
 				
+				String pattern = "HH:mm zzz MM-dd-yyyy";
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+				String createTimeProcess = simpleDateFormat.format(date);
+				
 				builder.setOrderId(orderId);
 				builder.setRobotId(robotId);
 				builder.setUserId(userId);
@@ -79,7 +83,7 @@ public class SubmitOrder extends HttpServlet {
 				builder.setOrigin(origin);
 				builder.setDestination(destination);
 				builder.seteArrival(eArrival);
-				builder.setCreateTime(createTime);
+				builder.setCreateTime(createTimeProcess);
 				builder.setCost(cost);
 				builder.setSender(sender);
 				builder.setReceiver(receiver);

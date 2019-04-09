@@ -1,8 +1,7 @@
 package rpc;
 
 import java.io.IOException;
-import java.util.Set;
-
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -46,7 +45,7 @@ public class CurrentOrder extends HttpServlet {
 			try {
 				String userId = CreateAndVerify.getUserId(token);
 				JSONArray array = new JSONArray();
-				Set<Order> orders = conn.getCurrentOrders(userId);
+				List<Order> orders = conn.getCurrentOrders(userId);
 				for (Order order : orders) {
 					JSONObject obj = order.toJSONObject();
 					array.put(obj);

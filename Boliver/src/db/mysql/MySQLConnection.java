@@ -1,10 +1,12 @@
 package db.mysql;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -172,18 +174,18 @@ public class MySQLConnection implements DBConnection {
 	}
 	
 	@Override
-	public Set<Order> getHistoryOrders(String userId, Integer start, Integer end) {
+	public List<Order> getHistoryOrders(String userId, Integer start, Integer end) {
 		
 		if (conn == null) {
 			System.out.println("DB connection failed for getCurrentOrders getHistoryOrders");
-			return new HashSet<>();
+			return new ArrayList<>();
 		}
-		Set<Order> historyOrders = new HashSet<>();
+		List<Order> historyOrders = new ArrayList<>();
 		try {
 			String sql = "SELECT a.user_id user_id, a.sender, a.receiver, a.order_id order_id,a.robot_id robot_id,a.order_status order_status,"
 					     + "a.origin origin,a.destination destination,a.e_arrival e_arrival,a.a_arrival a_arrival,"
 					     + "a.create_time create_time,a.cost cost,c.type type From orderHistory a,Robot b,Robottype c"
-					     + " where a.user_id = ? and a.robot_id=b.robot_id and b.type_id=c.type_id";
+					     + " where a.user_id = ? and a.robot_id=b.robot_id and b.type_id=c.type_id ORDER BY STR_TO_DATE(a_arrival,'%H:%i EDT %m-%d-%Y') DESC";
 			
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, userId);
@@ -216,19 +218,19 @@ public class MySQLConnection implements DBConnection {
 	}
 	
 	@Override
-	public Set<Order> getCurrentOrders(String userId){
+	public List<Order> getCurrentOrders(String userId){
 		if (conn == null) {
 			System.out.println("DB connection failed for getCurrentOrders");
-			return new HashSet<>();
+			return new ArrayList<>();
 		}
-		Set<Order> currentOrders = new HashSet<>();
+		List<Order> currentOrders = new ArrayList<>();
 		try {
 			String sql = "SELECT currentorder.order_id, currentorder.robot_id, robotType.type, currentorder.order_status, currentorder.sender, currentorder.receiver, robot.curLocation, currentorder.origin, currentorder.destination, currentorder.e_arrival, currentorder.create_time, currentorder.cost   \r\n" + 
 					"\r\n" + 
 					"FROM currentOrder\r\n" + 
 					"INNER JOIN robot ON currentOrder.robot_id = robot.robot_id \r\n" + 
 					"INNER JOIN robotType ON robot.type_id = robotType.type_id\r\n" + 
-					"WHERE currentorder.user_id = ?";
+					"WHERE currentorder.user_id = ? ORDER BY currentorder.order_id DESC";
 			
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, userId);
@@ -366,29 +368,25 @@ public class MySQLConnection implements DBConnection {
 				PreparedStatement stmt = conn.prepareStatement(sql);
 				stmt.setInt(1, i);
 				ResultSet rs = stmt.executeQuery();
-				BaseStatusBuilder builder = new BaseStatusBuilder();
-				builder.setBaseId(i);
-				boolean flag = false;
+
 				while(rs.next()) {
+					BaseStatusBuilder builder = new BaseStatusBuilder();
 					if(rs.getString("type_id").equals("1")) {
 						builder.setGround(true);
 					}
 					if(rs.getString("type_id").equals("2")) {
 						builder.setDrone(true);
 					}
-					if(!flag) {
-						builder.setLat(rs.getString("lat"));
-						builder.setLon(rs.getString("lon"));
-						builder.setAddress(rs.getString("address"));
-						flag = true;
-					}
+					builder.setBaseId(i);
+					builder.setLat(rs.getString("lat"));
+					builder.setLon(rs.getString("lon"));
+					builder.setAddress(rs.getString("address"));
+					results.add(builder.build());
 				}
-				results.add(builder.build());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return results;
 	}
 	
@@ -450,7 +448,10 @@ public class MySQLConnection implements DBConnection {
 			return false;
 		}
 		Calendar calendar = Calendar.getInstance();
-		String curTime = calendar.getTime().toString();
+		Date curTimeRaw = calendar.getTime();
+		String pattern = "HH:mm zzz MM-dd-yyyy";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		String curTime = simpleDateFormat.format(curTimeRaw);
 		try {
 			String sql = "UPDATE orderHistory SET order_status = ?, a_arrival= ? WHERE order_id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
@@ -536,6 +537,7 @@ public class MySQLConnection implements DBConnection {
 		}
 		
 		// calculate closest base and get its address
+		System.out.println("MySQLConnection.moveOrder.curLocation: " + curLocation);
 		String returnBaseAddr = ClosestBaseToRobot.getAddress(curLocation);
 		
 		// update robotStatus

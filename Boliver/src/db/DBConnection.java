@@ -21,7 +21,7 @@ public interface DBConnection {
 	public boolean registerUser(String userId, String username, String password, String email, String firstname,
 			                    String lastname);
 
-	public Set<Order> getHistoryOrders(String userId, Integer start, Integer end);
+	public List<Order> getHistoryOrders(String userId, Integer start, Integer end);
 	
 	public boolean placeOrder(Order order);
 	
@@ -29,7 +29,7 @@ public interface DBConnection {
 	
 	public String getDroneSpeed(String type);
 	
-	public Set<Order> getCurrentOrders(String userId);
+	public List<Order> getCurrentOrders(String userId);
 	
 	public List<BaseStatus> getBaseStatus();
 	
