@@ -236,17 +236,17 @@ public class MySQLTableCreation {
 			sql = "INSERT INTO OrderHistory VALUES('52019032705031200010','2','hito2019032704500200004', '3','3369 Mission St, San Francisco, CA 94110','448 Cortland Ave, San Francisco, CA 94110','hitobito','The Good Life Grocery','11:30 EDT 03-17-2019','12:00 EDT 03-17-2019','12:20 EDT 03-17-2019', '1')";
 			statement.execute(sql);
 			// demo
-			sql = "INSERT INTO OrderHistory VALUES('2019041007401400001','14','eva2019040807380300001','3','4101 Judah St, San Francisco, CA 94122','3138 Noriega St, San Francisco, CA 94122','eva','dave','19:00 EDT 04-10-2019','19:05 EDT 04-10-2019','18:30 EDT 04-10-2019','5')";
+			sql = "INSERT INTO OrderHistory VALUES('2019040707401400001','14','eva2019040807380300001','3','4101 Judah St, San Francisco, CA 94122','3138 Noriega St, San Francisco, CA 94122','eva','dave','19:00 EDT 04-07-2019','19:05 EDT 04-07-2019','18:30 EDT 04-07-2019','5')";
 			statement.execute(sql);
-			sql = "INSERT INTO OrderHistory VALUES('2019041007401400010','14','eva2019040807380300001','4','221 4th St, San Francisco, CA 94103','1100 California St, San Francisco, CA 94108','eva','Jack','10:25 EDT 04-10-2019','10:25 EDT 04-10-2019','10:00 EDT 04-10-2019','4')";
+			sql = "INSERT INTO OrderHistory VALUES('2019040787401400010','14','eva2019040807380300001','4','221 4th St, San Francisco, CA 94103','1100 California St, San Francisco, CA 94108','eva','Jack','10:25 EDT 04-07-2019','10:25 EDT 04-07-2019','10:00 EDT 04-07-2019','4')";
 			statement.execute(sql);
-			sql = "INSERT INTO OrderHistory VALUES('2019041007401400020','12','eva2019040807380300001','3','900 North Point St Suite 52, San Francisco, CA 94109','3601 Lyon St, San Francisco, CA 94123','eva','Rose','13:05 EDT 04-10-2019','13:05 EDT 04-10-2019','12:55 EDT 04-10-2019','3')";
+			sql = "INSERT INTO OrderHistory VALUES('2019040707401400020','12','eva2019040807380300001','3','900 North Point St Suite 52, San Francisco, CA 94109','3601 Lyon St, San Francisco, CA 94123','eva','Rose','13:05 EDT 04-07-2019','13:05 EDT 04-07-2019','12:55 EDT 04-07-2019','3')";
 			statement.execute(sql);
-			sql = "INSERT INTO OrderHistory VALUES('2019041007401400030','12','eva2019040807380300001','3','4150 Clement St, San Francisco, CA 94121','850 La Playa St, San Francisco, CA 94121','eva','Potter','14:00 EDT 04-10-2019','14:02 EDT 04-10-2019','13:30 EDT 04-10-2019','6')";
+			sql = "INSERT INTO OrderHistory VALUES('2019040707401400030','12','eva2019040807380300001','3','4150 Clement St, San Francisco, CA 94121','850 La Playa St, San Francisco, CA 94121','eva','Potter','14:00 EDT 04-07-2019','14:02 EDT 04-07-2019','13:30 EDT 04-07-2019','6')";
 			statement.execute(sql);
-			sql = "INSERT INTO OrderHistory VALUES('2019041007401400040','15','eva2019040807380300001','3','1396 La Playa St, San Francisco, CA 94122','1916 Irving St, San Francisco, CA 94122','eva','Harry','19:00 EDT 04-10-2019','19:01 EDT 04-10-2019','18:45 EDT 04-10-2019','4')";
+			sql = "INSERT INTO OrderHistory VALUES('2019040707401400040','15','eva2019040807380300001','3','1396 La Playa St, San Francisco, CA 94122','1916 Irving St, San Francisco, CA 94122','eva','Harry','19:00 EDT 04-07-2019','19:01 EDT 04-07-2019','18:45 EDT 04-07-2019','4')";
 			statement.execute(sql);
-			sql = "INSERT INTO OrderHistory VALUES('2019041007401400050','16','eva2019040807380300001','4','3876 Noriega St, San Francisco, CA 94122','3639 Taraval, San Francisco, CA 94116','eva','Dr.Who','16:30 EDT 04-10-2019','16:30 EDT 04-10-2019','15:40 EDT 04-10-2019','7')";
+			sql = "INSERT INTO OrderHistory VALUES('2019040707401400050','16','eva2019040807380300001','4','3876 Noriega St, San Francisco, CA 94122','3639 Taraval, San Francisco, CA 94116','eva','Dr.Who','16:30 EDT 04-07-2019','16:30 EDT 04-07-2019','15:40 EDT 04-07-2019','7')";
 			statement.execute(sql);
 			
 			System.out.println("Inserting values into OrderHistory SUCCESS");
