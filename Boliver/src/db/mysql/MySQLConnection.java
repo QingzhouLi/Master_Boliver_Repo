@@ -50,7 +50,7 @@ public class MySQLConnection implements DBConnection {
 			return false;
 		}
 		try {
-			String sql = "SELECT user_id FROM users WHERE username = ? AND pwd = ?";
+			String sql = "SELECT user_id FROM Users WHERE username = ? AND pwd = ?";
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, username);
 			statement.setString(2, password);
@@ -73,7 +73,7 @@ public class MySQLConnection implements DBConnection {
 		}
 		try { 
 			
-			String sql = "SELECT token FROM blacklist WHERE token = ?";
+			String sql = "SELECT token FROM BlackList WHERE token = ?";
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, token);
 			ResultSet rs = statement.executeQuery();
@@ -111,7 +111,7 @@ public class MySQLConnection implements DBConnection {
 			return false;
 		}
 		try {
-			String sql = "INSERT IGNORE INTO users VALUES(?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT IGNORE INTO Users VALUES(?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, userId);
 			ps.setString(2, username);
@@ -134,7 +134,7 @@ public class MySQLConnection implements DBConnection {
 			return null;
 		}
 		try {
-			String sql = "SELECT speed FROM robotType WHERE type = ?";
+			String sql = "SELECT speed FROM RobotType WHERE type = ?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, type);
 
@@ -158,7 +158,7 @@ public class MySQLConnection implements DBConnection {
 			return null;
 		}
 		try {
-			String sql = "SELECT user_id FROM users WHERE username = ?";
+			String sql = "SELECT user_id FROM Users WHERE username = ?";
 		    PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, username);
 			ResultSet rs = stmt.executeQuery();
@@ -184,7 +184,7 @@ public class MySQLConnection implements DBConnection {
 		try {
 			String sql = "SELECT a.user_id user_id, a.sender, a.receiver, a.order_id order_id,a.robot_id robot_id,a.order_status order_status,"
 					     + "a.origin origin,a.destination destination,a.e_arrival e_arrival,a.a_arrival a_arrival,"
-					     + "a.create_time create_time,a.cost cost,c.type type From orderHistory a,Robot b,Robottype c"
+					     + "a.create_time create_time,a.cost cost,c.type type From OrderHistory a,Robot b,RobotType c"
 					     + " where a.user_id = ? and a.robot_id=b.robot_id and b.type_id=c.type_id ORDER BY STR_TO_DATE(a_arrival,'%H:%i EDT %m-%d-%Y') DESC";
 			
 			PreparedStatement stmt = conn.prepareStatement(sql);
@@ -223,14 +223,14 @@ public class MySQLConnection implements DBConnection {
 			System.out.println("DB connection failed for getCurrentOrders");
 			return new ArrayList<>();
 		}
-		List<Order> currentOrders = new ArrayList<>();
+		List<Order> CurrentOrders = new ArrayList<>();
 		try {
-			String sql = "SELECT currentorder.order_id, currentorder.robot_id, robotType.type, currentorder.order_status, currentorder.sender, currentorder.receiver, robot.curLocation, currentorder.origin, currentorder.destination, currentorder.e_arrival, currentorder.create_time, currentorder.cost   \r\n" + 
+			String sql = "SELECT CurrentOrder.order_id, CurrentOrder.robot_id, RobotType.type, CurrentOrder.order_status, CurrentOrder.sender, CurrentOrder.receiver, Robot.curLocation, CurrentOrder.origin, CurrentOrder.destination, CurrentOrder.e_arrival, CurrentOrder.create_time, CurrentOrder.cost   \r\n" + 
 					"\r\n" + 
-					"FROM currentOrder\r\n" + 
-					"INNER JOIN robot ON currentOrder.robot_id = robot.robot_id \r\n" + 
-					"INNER JOIN robotType ON robot.type_id = robotType.type_id\r\n" + 
-					"WHERE currentorder.user_id = ? ORDER BY currentorder.order_id DESC";
+					"FROM CurrentOrder\r\n" + 
+					"INNER JOIN Robot ON CurrentOrder.robot_id = Robot.robot_id \r\n" + 
+					"INNER JOIN RobotType ON Robot.type_id = RobotType.type_id\r\n" + 
+					"WHERE CurrentOrder.user_id = ? ORDER BY CurrentOrder.order_id DESC";
 			
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, userId);
@@ -251,13 +251,13 @@ public class MySQLConnection implements DBConnection {
 				builder.setCreateTime(rs.getString("create_time"));
 				builder.setCost(rs.getString("cost"));
 				builder.setRobotType(rs.getString("type"));
-				currentOrders.add(builder.build());
+				CurrentOrders.add(builder.build());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		return currentOrders;
+		return CurrentOrders;
 	}
 
 	@Override
@@ -318,11 +318,11 @@ public class MySQLConnection implements DBConnection {
 		}
 		Set<Order> results = new HashSet<>();
 		try {
-			String sql ="SELECT currentorder.order_id, currentorder.robot_id, currentorder.sender, currentorder.receiver, currentorder.order_status, robotType.type, robot.curLocation, currentorder.origin, currentorder.destination, currentorder.e_arrival, currentorder.create_time, currentorder.cost   \r\n" + 
+			String sql ="SELECT CurrentOrder.order_id, CurrentOrder.robot_id, CurrentOrder.sender, CurrentOrder.receiver, CurrentOrder.order_status, RobotType.type, Robot.curLocation, CurrentOrder.origin, CurrentOrder.destination, CurrentOrder.e_arrival, CurrentOrder.create_time, CurrentOrder.cost   \r\n" + 
 					"\r\n" + 
-					"FROM currentOrder\r\n" + 
-					"INNER JOIN robot ON currentOrder.robot_id = robot.robot_id \r\n" + 
-					"INNER JOIN robotType ON robot.type_id = robotType.type_id\r\n" + 
+					"FROM CurrentOrder\r\n" + 
+					"INNER JOIN Robot ON CurrentOrder.robot_id = Robot.robot_id \r\n" + 
+					"INNER JOIN RobotType ON Robot.type_id = RobotType.type_id\r\n" + 
 					"WHERE order_id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, orderId);
@@ -332,18 +332,18 @@ public class MySQLConnection implements DBConnection {
 			OrderBuilder builder = new OrderBuilder();
 
 			while (rs.next()) {		
-				builder.setOrderId(rs.getString("currentorder.order_id"));
-				builder.setRobotId(rs.getString("currentorder.robot_id"));
-				builder.setRobotType(rs.getString("robotType.type"));
-				builder.setCurrentLocation(rs.getString("robot.curLocation"));
-				builder.setOrigin(rs.getString("currentorder.origin"));
-				builder.setDestination(rs.getString("currentorder.destination"));
+				builder.setOrderId(rs.getString("CurrentOrder.order_id"));
+				builder.setRobotId(rs.getString("CurrentOrder.robot_id"));
+				builder.setRobotType(rs.getString("RobotType.type"));
+				builder.setCurrentLocation(rs.getString("Robot.curLocation"));
+				builder.setOrigin(rs.getString("CurrentOrder.origin"));
+				builder.setDestination(rs.getString("CurrentOrder.destination"));
 				builder.setSender(rs.getString("sender"));
 				builder.setReceiver(rs.getString("receiver"));
-				builder.seteArrival(rs.getString("currentorder.e_arrival"));
-				builder.setCreateTime(rs.getString("currentorder.create_time"));
-				builder.setCost(rs.getString("currentorder.cost"));
-				builder.setOrderStatus(rs.getString("currentorder.order_status"));
+				builder.seteArrival(rs.getString("CurrentOrder.e_arrival"));
+				builder.setCreateTime(rs.getString("CurrentOrder.create_time"));
+				builder.setCost(rs.getString("CurrentOrder.cost"));
+				builder.setOrderStatus(rs.getString("CurrentOrder.order_status"));
 				results.add(builder.build());
 			}
 		} catch (SQLException e) {
@@ -364,7 +364,7 @@ public class MySQLConnection implements DBConnection {
 		
 		try {
 			for(int i = 1; i < 4; i++) {
-				String sql = "SELECT type_id, lat, lon, address FROM `robot` INNER JOIN base ON robot.base_id = base.base_id WHERE robot.base_id = ? GROUP BY type_id";
+				String sql = "SELECT type_id, lat, lon, address FROM `Robot` INNER JOIN Base ON Robot.base_id = Base.base_id WHERE Robot.base_id = ? GROUP BY type_id";
 				PreparedStatement stmt = conn.prepareStatement(sql);
 				stmt.setInt(1, i);
 				ResultSet rs = stmt.executeQuery();
@@ -391,20 +391,20 @@ public class MySQLConnection implements DBConnection {
 	}
 	
 	@Override
-	public String getRobotId(String baseAddress, String robotType) {
+	public String getRobotId(String baseAddress, String RobotType) {
 		if (conn == null) {
 			System.err.println("DB connection failed");
 			return null;
 		}
 		
 		try {
-			String sql = "SELECT robot_id FROM `robot` "
-					+ "INNER JOIN base ON robot.base_id = base.base_id "
-					+ "INNER JOIN robotType ON robot.type_id = robottype.type_id "
-					+ "WHERE address = ? AND robotType.type = ?";
+			String sql = "SELECT robot_id FROM `Robot` "
+					+ "INNER JOIN Base ON Robot.base_id = Base.base_id "
+					+ "INNER JOIN RobotType ON Robot.type_id = RobotType.type_id "
+					+ "WHERE address = ? AND RobotType.type = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, baseAddress);
-			stmt.setString(2, robotType);
+			stmt.setString(2, RobotType);
 			
 			ResultSet rs = stmt.executeQuery();
 			String robotId = null;
@@ -425,7 +425,7 @@ public class MySQLConnection implements DBConnection {
 			return false;
 		}
 		try {
-			String sql = "UPDATE robot SET robotStatus = ?, destination= ?, base_id = ? WHERE robot_id = ?";
+			String sql = "UPDATE Robot SET robotStatus = ?, destination= ?, base_id = ? WHERE robot_id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, newStatus);
 			stmt.setString(2, destination);
@@ -453,7 +453,7 @@ public class MySQLConnection implements DBConnection {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String curTime = simpleDateFormat.format(curTimeRaw);
 		try {
-			String sql = "UPDATE orderHistory SET order_status = ?, a_arrival= ? WHERE order_id = ?";
+			String sql = "UPDATE OrderHistory SET order_status = ?, a_arrival= ? WHERE order_id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, newStatus);
 			stmt.setString(2, curTime);
@@ -475,7 +475,7 @@ public class MySQLConnection implements DBConnection {
 			return false;
 		}
 		try {
-			String sql = "SELECT * FROM currentorder WHERE order_id = ?";
+			String sql = "SELECT * FROM CurrentOrder WHERE order_id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, orderId);
 			
@@ -517,11 +517,11 @@ public class MySQLConnection implements DBConnection {
 			return false;
 		}
 			
-		// get robot_id, curLocation of robot, given order_id
+		// get robot_id, curLocation of Robot, given order_id
 		String robotId = null;
 		String curLocation = null;
 		try {
-			String sql = "SELECT currentorder.robot_id, robot.curLocation FROM currentorder INNER JOIN robot ON currentorder.robot_id = robot.robot_id WHERE order_id = ?";
+			String sql = "SELECT CurrentOrder.robot_id, Robot.curLocation FROM CurrentOrder INNER JOIN Robot ON CurrentOrder.robot_id = Robot.robot_id WHERE order_id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, orderId);
 			
@@ -536,22 +536,22 @@ public class MySQLConnection implements DBConnection {
 			e.printStackTrace();
 		}
 		
-		// calculate closest base and get its address
+		// calculate closest Base and get its address
 		System.out.println("MySQLConnection.moveOrder.curLocation: " + curLocation);
 		String returnBaseAddr = ClosestBaseToRobot.getAddress(curLocation);
 		
 		// update robotStatus
-		boolean updateRobot = updateRobotStatus(robotId, returnBaseAddr, "returning", "-1"); // {robotId, returning base address, new robot status, new base_id status(status remains -1 as it has not yet arrived at any base)}
+		boolean updateRobot = updateRobotStatus(robotId, returnBaseAddr, "returning", "-1"); // {robotId, returning Base address, new Robot status, new base_id status(status remains -1 as it has not yet arrived at any Base)}
 		
 		boolean deleteOrder = false;
 		boolean moved = false;
 
-		// copy paste order from currentOrder to orderHisotry
+		// copy paste order from CurrentOrder to orderHisotry
 		try { // TODO
-			String sql = "INSERT INTO orderhistory (order_id, robot_id, user_id, order_status, origin, destination, sender, receiver, e_arrival, create_time, cost)\r\n" + 
+			String sql = "INSERT INTO OrderHistory (order_id, robot_id, user_id, order_status, origin, destination, sender, receiver, e_arrival, create_time, cost)\r\n" + 
 					     "SELECT order_id, robot_id, user_id, order_status, origin, destination, sender, receiver, e_arrival, create_time, cost\r\n" + 
-					     "FROM currentorder \r\n" + 
-					     "WHERE currentorder.order_id = ?";
+					     "FROM CurrentOrder \r\n" + 
+					     "WHERE CurrentOrder.order_id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, orderId);
 			
@@ -564,9 +564,9 @@ public class MySQLConnection implements DBConnection {
 		// update orderStatus
 		boolean updateOrder = updateOrderStatus(orderId, newStatus);
 		
-		// delete order from currentOrder
+		// delete order from CurrentOrder
 		try {
-			String sql = "DELETE FROM currentorder WHERE order_id = ?";
+			String sql = "DELETE FROM CurrentOrder WHERE order_id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setString(1, orderId);
 			
@@ -586,11 +586,11 @@ public class MySQLConnection implements DBConnection {
 					System.out.println("updateOrder is a success");
 					
 					if(deleteOrder) {
-						System.out.println("delete order from currentOrders is a success");
+						System.out.println("delete order from CurrentOrders is a success");
 						return true;
 						
 					} else {
-						System.out.println("delete order from currentOrders has failed");
+						System.out.println("delete order from CurrentOrders has failed");
 					}
 				} else {
 					System.out.println("updating order has failed");
