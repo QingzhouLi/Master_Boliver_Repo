@@ -57,7 +57,7 @@ public class SearchRoute extends HttpServlet {
 			obj.put("status", "are you trying to gain illegal access? Where is your token?");
 			RpcHelper.writeJsonObject(response, obj);
 		}
-	
+		return;
 	}
 
 }

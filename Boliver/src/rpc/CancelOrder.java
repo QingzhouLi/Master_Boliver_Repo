@@ -43,6 +43,7 @@ public class CancelOrder extends HttpServlet {
 			JSONObject input = RpcHelper.readJSONObject(request);
 			String orderId = input.getString("order_id").toString();
 			if(orderId != null && conn.validateOrderId(orderId)) {
+				response.setStatus(200);
 				if(conn.cancelOrder(orderId)){
 					obj.put("status", "you have successfully deleted order" + orderId);
 				}else {

@@ -92,6 +92,7 @@ public class SubmitOrder extends HttpServlet {
 				JSONObject obj = new JSONObject();
 				
 				if(conn.placeOrder(order) && conn.updateRobotStatus(order.getRobotId(), order.getDestination(), "retrieving", "-1")) {
+					response.setStatus(200);
 					obj.put("status", "order placed, robot assigned");
 				}else if(!conn.placeOrder(order)) {
 					response.setStatus(401);
